@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusConnect | Campus Events</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div id="loginPage">
+<div class="login-card">
+<div class="logo">Campus<span>Connect.</span></div>
+<p>Discover campus events. Connect with your university community.</p>
+<form id="loginForm">
+<label>Email address</label>
+<input type="email" id="loginEmail" placeholder="Enter your email" required>
+<label>Password</label>
+<input type="password" id="loginPassword" placeholder="Enter password" required>
+<button class="btn full" type="submit">Login to Dashboard →</button>
+</form>
+<div class="demo">
+<strong>DEMO STUDENT</strong><br>
+Email: student@campus.com<br>
+Password: student123<br><br>
+<strong>DEMO ADMIN</strong><br>
+Email: admin@campus.com<br>
+Password: admin123
+</div>
+</div>
+</div>
+
+<div id="app" class="hidden">
+<aside class="sidebar">
+<div class="logo">Campus<span>Connect.</span></div>
+<div class="nav-title">MENU</div>
+<button class="nav-btn active" onclick="showPage('dashboard',this)">⌂ Dashboard</button>
+<button class="nav-btn" onclick="showPage('events',this)">✦ Discover Events</button>
+<button class="nav-btn" onclick="showPage('registrations',this)">▣ My Registrations</button>
+<button class="nav-btn admin-only hidden" onclick="showPage('admin',this)">⚙ Manage Events</button>
+<div class="sidebar-bottom">
+<button class="nav-btn" onclick="logout()">↪ Logout</button>
+</div>
+</aside>
+
+<main class="main">
+<div class="topbar">
+<div><h2>Campus Connect</h2><p>Your university event space</p></div>
+<div class="user-info"><div class="avatar" id="avatar">S</div><div><strong id="userName">Student</strong><p id="userRole">Student</p></div></div>
+</div>
+
+<section id="dashboard" class="section active">
+<div class="welcome-panel">
+<span class="welcome-eyebrow">YOUR CAMPUS • YOUR COMMUNITY</span>
+<h1 id="welcomeTitle">Welcome back!</h1>
+<p class="subtitle">Here's what's happening around your campus.</p>
+</div>
+
+<div class="stats">
+<div class="stat-card"><p>Total Events</p><h2 id="totalEvents">0</h2></div>
+<div class="stat-card"><p>My Registrations</p><h2 id="totalRegistrations">0</h2></div>
+<div class="stat-card"><p>Confirmed</p><h2 id="confirmedRegistrations">0</h2></div>
+<div class="stat-card"><p>Upcoming Events</p><h2 id="upcomingEvents">0</h2></div>
+</div>
+
+<div class="dashboard-heading">
+<div>
+<h2>Explore Campus Events</h2>
+<p class="subtitle" style="margin:4px 0 0">Find your next campus experience.</p>
+</div>
+<button class="btn secondary small" onclick="showPage('events')">View All →</button>
+</div>
+
+<div class="category-list" id="dashboardCategories">
+<button class="category-chip active" data-category="" onclick="setCategoryFilter('')">All Events</button>
+<button class="category-chip" data-category="Technical" onclick="setCategoryFilter('Technical')">💻 Technical</button>
+<button class="category-chip" data-category="Sports" onclick="setCategoryFilter('Sports')">⚽ Sports</button>
+<button class="category-chip" data-category="Dance" onclick="setCategoryFilter('Dance')">💃 Dance</button>
+<button class="category-chip" data-category="Music" onclick="setCategoryFilter('Music')">🎵 Music</button>
+<button class="category-chip" data-category="Cultural" onclick="setCategoryFilter('Cultural')">🎭 Cultural</button>
+<button class="category-chip" data-category="Business" onclick="setCategoryFilter('Business')">🚀 Business</button>
+<button class="category-chip" data-category="Arts" onclick="setCategoryFilter('Arts')">🎨 Arts</button>
+</div>
+
+<div class="ending-section">
+<h2>🔥 Registration Ending Soon</h2>
+<p class="ending-description">Don't miss out! These events have registration deadlines approaching.</p>
+<div id="endingSoonEvents" class="event-grid"></div>
+</div>
+
+<div class="dashboard-heading">
+<h2>Events in Category / Recently Added</h2>
+</div>
+<div id="dashboardEvents" class="event-grid"></div>
+</section>
+
+<section id="events" class="section">
+<h1>Discover Events</h1>
+<p class="subtitle">Find something exciting happening on campus.</p>
+
+<div class="toolbar" style="display:flex;gap:14px;flex-wrap:wrap;margin:20px 0 30px">
+<input id="searchInput" type="text" placeholder="Search events by name or venue..." style="flex:1;min-width:200px">
+<select id="categoryFilter" style="width:auto;min-width:170px">
+<option value="">All Categories</option>
+<option>Technical</option>
+<option>Sports</option>
+<option>Cultural</option>
+<option>Music</option>
+<option>Dance</option>
+<option>Business</option>
+<option>Arts</option>
+</select>
+</div>
+
+<div class="category-list discover-categories" id="discoverCategories" aria-label="Filter events by category">
+<button class="category-chip active" data-category="" onclick="setCategoryFilter('')">All Events</button>
+<button class="category-chip" data-category="Technical" onclick="setCategoryFilter('Technical')">💻 Technical</button>
+<button class="category-chip" data-category="Sports" onclick="setCategoryFilter('Sports')">⚽ Sports</button>
+<button class="category-chip" data-category="Dance" onclick="setCategoryFilter('Dance')">💃 Dance</button>
+<button class="category-chip" data-category="Music" onclick="setCategoryFilter('Music')">🎵 Music</button>
+<button class="category-chip" data-category="Cultural" onclick="setCategoryFilter('Cultural')">🎭 Cultural</button>
+<button class="category-chip" data-category="Business" onclick="setCategoryFilter('Business')">🚀 Business</button>
+<button class="category-chip" data-category="Arts" onclick="setCategoryFilter('Arts')">🎨 Arts</button>
+</div>
+
+<div class="results-note" id="resultsNote" aria-live="polite"></div>
+<div id="eventGrid" class="event-grid"></div>
+</section>
+
+<section id="details" class="section">
+<button class="btn secondary small" onclick="showPage('events')">← Back to Events</button>
+<div id="eventDetails" style="margin-top:20px"></div>
+</section>
+
+<section id="register" class="section">
+<h1>Event Registration</h1>
+<p class="subtitle">Enter your information to reserve your place.</p>
+<div class="panel">
+<h3 id="registrationEventTitle" style="margin-bottom:15px">Register for Event</h3>
+<form id="registrationForm">
+<div class="form-grid">
+<div><label>Full Name *</label><input id="studentName" required placeholder="Your full name"></div>
+<div><label>Student ID *</label><input id="studentId" required placeholder="Your student ID"></div>
+<div><label>Email *</label><input id="studentEmail" type="email" required placeholder="Your email"></div>
+<div><label>Phone Number *</label><input id="studentPhone" type="tel" pattern="[0-9+ -]{10,15}" required placeholder="Your phone number"></div>
+</div>
+<div style="display:flex;gap:12px;margin-top:25px">
+<button type="submit" class="btn" style="flex:1;margin-top:0">Confirm Registration</button>
+<button type="button" class="btn secondary" style="flex:1" onclick="showPage('events')">Cancel</button>
+</div>
+</form>
+</div>
+</section>
+
+<section id="registrations" class="section">
+<h1>My Registrations</h1>
+<p class="subtitle">Track the events you have registered for.</p>
+<div class="panel table-wrap">
+<table>
+<thead>
+<tr><th>Event</th><th>Date</th><th>Student</th><th>Status</th><th>Action</th></tr>
+</thead>
+<tbody id="registrationTable"></tbody>
+</table>
+</div>
+</section>
+
+<section id="admin" class="section">
+<h1>Event Management</h1>
+<p class="subtitle">Create, update and manage campus events.</p>
+
+<div class="stats">
+<div class="stat-card"><p>Total Events</p><h2 id="adminTotalEvents">0</h2></div>
+<div class="stat-card"><p>Total Registrations</p><h2 id="adminTotalRegistrations">0</h2></div>
+<div class="stat-card"><p>Confirmed</p><h2 id="adminConfirmed">0</h2></div>
+<div class="stat-card"><p>Available Seats</p><h2 id="adminSeats">0</h2></div>
+</div>
+
+<div class="panel" style="margin-bottom:30px">
+<h2 id="eventFormHeading" style="margin-bottom:15px">Add New Event</h2>
+<form id="eventForm">
+<input type="hidden" id="editEventId">
+<div class="form-grid">
+<div><label>Event Name *</label><input id="eventName" required placeholder="Enter event name"></div>
+
+<div>
+<label>Category *</label>
+<select id="eventCategory" required>
+<option value="">Select category</option>
+<option>Technical</option>
+<option>Sports</option>
+<option>Cultural</option>
+<option>Music</option>
+<option>Dance</option>
+<option>Business</option>
+<option>Arts</option>
+</select>
+</div>
+
+<div><label>Event Date *</label><input type="date" id="eventDate" required></div>
+<div><label>Event Time *</label><input type="time" id="eventTime" required></div>
+<div><label>Venue *</label><input id="eventVenue" required placeholder="Building or grounds"></div>
+<div><label>Maximum Seats *</label><input type="number" id="eventCapacity" min="1" required placeholder="50"></div>
+<div><label>Registration Deadline *</label><input type="datetime-local" id="eventDeadline" required></div>
+<div class="wide"><label>Description *</label><textarea id="eventDescription" required placeholder="Provide brief event details..."></textarea></div>
+</div>
+
+<div style="display:flex;gap:12px;margin-top:20px">
+<button class="btn" type="submit" style="margin-top:0" id="saveEventButton">Add Event</button>
+<button class="btn secondary hidden" type="button" id="cancelEditButton" onclick="resetEventForm()">Cancel Edit</button>
+</div>
+</form>
+</div>
+
+<div class="panel table-wrap">
+<h2 style="margin-bottom:15px">All Events</h2>
+<table>
+<thead>
+<tr><th>Event</th><th>Category</th><th>Date</th><th>Capacity</th><th>Actions</th></tr>
+</thead>
+<tbody id="adminEventTable"></tbody>
+</table>
+</div>
+</section>
+
+</main>
+</div>
+
+<div id="toast" class="hidden"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
